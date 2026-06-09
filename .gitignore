@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+
+# VS / C++ 编译产物
+Debug/
+Release/
+*.suo
+*.user
+*.ncb
+*.aps
+*.pdb
+*.idb
+*.obj
+*.res
+*.ilk
+/build/
+
+# IDE
+.vscode/
+.idea/
+
+# 巨无霸/敏感
+*.exe
+*.dll
+*.so
+.env
