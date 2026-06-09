@@ -163,11 +163,39 @@ class MainWindow(QMainWindow):
         self.stop_btn.setEnabled(False)
 
     def on_result(self, rec: dict):
+        # keep canonical record for CSV export
         self.records.append(rec)
-        row = self.table.rowCount()
-        self.table.insertRow(row)
-        for col, key in enumerate(['timestamp','target_ip','open_ports','services','scanned_ports_count','scan_duration_ms','notes']):
-            self.table.setItem(row, col, QTableWidgetItem(str(rec.get(key, ''))))
+
+        # display one port per row with corresponding service
+        open_ports_field = rec.get('open_ports', '')
+        services_field = rec.get('services', '')
+        if isinstance(open_ports_field, str):
+            ports = [p for p in open_ports_field.split(';') if p]
+        else:
+            ports = [str(p) for p in open_ports_field]
+        if isinstance(services_field, str):
+            services = [s for s in services_field.split(';') if s]
+        else:
+            services = [str(s) for s in services_field]
+
+        if ports:
+            for i, port in enumerate(ports):
+                svc = services[i] if i < len(services) else ''
+                row = self.table.rowCount()
+                self.table.insertRow(row)
+                values = [rec.get('timestamp',''), rec.get('target_ip',''), port, svc, rec.get('scanned_ports_count',''), rec.get('scan_duration_ms',''), rec.get('notes','')]
+                for col, val in enumerate(values):
+                    item = QTableWidgetItem(str(val))
+                    item.setTextAlignment(Qt.AlignCenter)
+                    self.table.setItem(row, col, item)
+        else:
+            # no open ports: insert a single summary row with empty port/service
+            row = self.table.rowCount()
+            self.table.insertRow(row)
+            for col, key in enumerate(['timestamp','target_ip','open_ports','services','scanned_ports_count','scan_duration_ms','notes']):
+                item = QTableWidgetItem(str(rec.get(key, '')))
+                item.setTextAlignment(Qt.AlignCenter)
+                self.table.setItem(row, col, item)
 
     def on_finished(self):
         self.start_btn.setEnabled(True)
