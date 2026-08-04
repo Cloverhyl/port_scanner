@@ -63,6 +63,5 @@ GUI 中会在无效输入时显示提示对话框。
 pyinstaller --noconfirm --onedir --windowed --add-data "ui;ui" app_gui.py
 ```
 
-## 建议
-- 在提交前创建 `.gitignore`、`LICENSE`（例如 MIT）和 `README.md`。
+## 建议 
 - 遵守法律与学校/单位的扫描政策。
